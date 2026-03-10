@@ -14,10 +14,10 @@ class DiscountMixin:
         self.discount_percent = discount_percent
 
     def get_price(self) -> float:
-        discount = (self.discount_percent / 100) * self.base_price
-        return self.base_price - discount
+        base = getattr(self, 'base_price', 0.0)
+        discount = (self.discount_percent / 100) * base
+        return base - discount
     
-
 
 class ShippingMixin:
     shipping_rate_per_kg = 5.0 #Dollars per kg
@@ -44,11 +44,8 @@ class Product(Item, DiscountMixin, ShippingMixin):
 
 class DigitalProduct(Item, DiscountMixin):
     def __init__(self, name: str, base_price: float, discount_percent: float = 0.0) -> None:
-        super().__init__(name, base_price)
+        super().__init__(name, base_price, weight=0.0)
         self.discount_percent = discount_percent
 
     def get_info(self):
         return f"Item name: {self.name}, Price: ${self.base_price}, Discount: {self.discount_percent}%"
-    
-
-    

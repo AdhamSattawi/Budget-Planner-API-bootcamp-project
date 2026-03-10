@@ -4,7 +4,7 @@ from functools import lru_cache
 def fibonacci(num: int) -> int:
     """This function calculates the nth Fibonacci number."""
     if num < 1:
-        raise ValueError()
+        raise ValueError("it must be 1 or greater")
     if num == 1:
         return 0
     if num == 2:

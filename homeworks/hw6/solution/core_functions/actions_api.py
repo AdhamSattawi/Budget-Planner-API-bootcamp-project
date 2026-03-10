@@ -1,6 +1,5 @@
 from user_interface.user_input import income_input, expense_input, remove_input
 import requests
-from budget_app_api.budget_planner_api import my_budget
 
 BASE_URL = "http://127.0.0.1:8000"
 

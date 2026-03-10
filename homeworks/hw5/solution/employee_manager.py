@@ -63,7 +63,7 @@ class Manager(FullTimeEmployee):
         Salary: {self.annual_salary:.2f} $/year,
         Department: {self.department},
         Team Size: {self.team_size},
-        Bonus Persentage: {self.bonus_percentage}
+        Bonus Percentage: {self.bonus_percentage}
         Benefits: standard package plus bonus compensation
         Additional responsibility: Must track and report team size
         """

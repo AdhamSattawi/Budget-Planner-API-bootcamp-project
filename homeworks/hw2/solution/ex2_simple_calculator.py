@@ -19,7 +19,10 @@ def parsing_input(user_input: str) -> str | int | float:
 
 
 def decimal_validation(num1: str, num2: str) -> None:
-    if not num1.isdecimal() or not num2.isdecimal():
+    try:
+        float(num1)
+        float(num2)
+    except ValueError:
         raise ValueError("please enter valid numbers.")
 
 
@@ -43,7 +46,7 @@ def multiply(num1: str, num2: str) -> str:
 
 def divide(num1: str, num2: str) -> str:
     decimal_validation(num1, num2)
-    if num2 == 0:
+    if int(num2) == 0:
         raise ZeroDivisionError("Can't divide by 0.")
     result = float(num1) / float(num2)
     return f"The answer is {result}"

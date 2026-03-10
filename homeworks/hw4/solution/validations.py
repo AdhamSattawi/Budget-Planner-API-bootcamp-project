@@ -7,7 +7,9 @@ def valid_option(option: str) -> bool:
 
 
 def valid_adding(amount: str, desc: str) -> bool:
-    if not amount.isdigit():
+    try:
+        float(amount)
+    except ValueError:
         raise ValueError("Amount must be a number.")
     if float(amount) < 0:
         raise ValueError("Amount must be greater than zero.")

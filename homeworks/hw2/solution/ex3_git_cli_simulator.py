@@ -53,7 +53,8 @@ def command_validation(git_command: str) -> None:
     for command in command_list:
         if git_command.startswith(command):
             break
-    raise ValueError("Unknown command")
+    else:
+        raise ValueError("Unknown command")
 
 
 def add_command(command_parts: list) -> str:

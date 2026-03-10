@@ -11,17 +11,17 @@ class MyLruCache:
         
 
     def get(self, key: str) -> Any | None:
-        current_time = time.time()
-        passed_time = current_time - self.cache[key][1]
         if key not in self.cache:
             return None
-        elif passed_time >= self.ttl:
+        current_time = time.time()
+        passed_time = current_time - self.cache[key][1]
+        if passed_time >= self.ttl:
             self.cache.pop(key)
             return None
         else:
             old = self.cache.pop(key)
             self.cache[key] =  [old[0], current_time]      
-            return self.cache[key]
+            return self.cache[key][0]
 
 
     def set(self, key: str, value: Any) -> None:
@@ -39,6 +39,7 @@ class MyLruCache:
 
         
     def first_out(self, cache: dict) -> str:
+        """Returns the first key in the dict."""
         least_recent = ""
         for key in cache:
             least_recent = key
@@ -49,12 +50,11 @@ class MyLruCache:
         self.cache.clear()
 
     def __len__(self) -> int:
-        len(self.cache)
+        return len(self.cache)
 
     def __contains__(self, key: str) -> bool:
+        if key not in self.cache:
+            return False
         current_time = time.time()
         passed_time = current_time - self.cache[key][1]
-        if (key in self.cache) and (passed_time <= self.ttl):
-            return True
-        else:
-            return False
+        return passed_time <= self.ttl

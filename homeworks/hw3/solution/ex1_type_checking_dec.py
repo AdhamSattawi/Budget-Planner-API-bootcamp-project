@@ -26,8 +26,9 @@ def supported_types(arg_type: dict) -> bool:
 
 def kwarg_check(kwargs: dict, arg_type_dict: dict) -> None:
     for arg in kwargs:
-        if not isinstance(kwargs[arg], arg_type_dict[arg]):
-            raise TypeError()
+        if arg in arg_type_dict:
+            if not isinstance(kwargs[arg], arg_type_dict[arg]):
+                raise TypeError(f"Argument '{arg}' must be {arg_type_dict[arg]}")
 
 
 def args_check(args: tuple, arg_type_dict: dict) -> None:
@@ -35,4 +36,4 @@ def args_check(args: tuple, arg_type_dict: dict) -> None:
     for arg, name in zip(args, name_list):
         type_expected = arg_type_dict[name]
         if not isinstance(arg, type_expected):
-            raise TypeError()
+            raise TypeError(f"Argument '{arg}' must be {arg_type_dict[arg]}")
