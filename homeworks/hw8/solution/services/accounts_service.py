@@ -65,7 +65,7 @@ class BudgetAccount:
                 account_transfers_out += transfer.amount
         return account_transfers_in - account_transfers_out
 
-    def get_all_balances(self) -> list[tuple[Account, Decimal]]:
+    def get_all_accounts(self) -> list[tuple[Account, Decimal]]:
         accounts = self.repo.get_all()
         if not accounts:
             return []
@@ -75,7 +75,7 @@ class BudgetAccount:
             all_accounts_balances.append((account, balance))
         return all_accounts_balances
     
-    def view_net_worth(self) -> Decimal:
+    def get_net_worth(self) -> Decimal:
         accounts = self.repo.get_all()
         return sum(self.get_balance(account.id) for account in accounts)
         
