@@ -22,6 +22,12 @@ async def view_all_accounts(account_service: BudgetAccount = Depends(get_account
         all_accounts[f"{acc.id}_{acc.name}"] = str(acc_balance)
     return all_accounts
 
+@router.get("/net_worth")
+async def view_net_worth(account_service: BudgetAccount = Depends(get_account_service)) -> dict:
+    total = account_service.get_net_worth()
+    net_worth = {"net_worth" : str(total)}
+    return net_worth
+
 @router.get("/{account_id}")
 async def view_balance(account_id: int,
                        account_service: BudgetAccount = Depends(get_account_service)) -> dict:
@@ -34,11 +40,6 @@ async def delete_account(account_id: int,
                          account_service: BudgetAccount = Depends(get_account_service)) -> bool:
     return account_service.delete_account(account_id)
 
-@router.get("/net_worth")
-async def view_net_worth(account_service: BudgetAccount = Depends(get_account_service)) -> dict:
-    total = account_service.get_net_worth()
-    net_worth = {"net_worth" : str(total)}
-    return net_worth
 
 @router.put("/{account_id}")
 async def update_account_name(account_id: int, new_updates: dict,
