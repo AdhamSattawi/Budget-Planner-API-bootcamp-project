@@ -1,22 +1,15 @@
 from datetime import date
 from decimal import Decimal
-from fastapi import APIRouter
-from services.transfer_service import BudgetTransfer
-from repository.transfer_repository import TransferRepo
+from fastapi import APIRouter, Depends
 from models.transfer import Transfer
-from repository.csv_accessor import CsvFileAccessor
+from services.transfer_service import BudgetTransfer
+from api.dependencies import get_transfer_service
 
 router = APIRouter(prefix = "/transfers", tags = ["Transfers"])
 
-ACCOUNTS_CSV_PATH = "data/transfers.csv"
-ACCOUNTS_HEADERS = ["id", "sender_id", "receiver_id", "amount", "description", "created_on"]
-
-accessor = CsvFileAccessor(ACCOUNTS_CSV_PATH, ACCOUNTS_HEADERS)
-repo = TransferRepo(accessor)
-transfer_service = BudgetTransfer(repo)
 
 @router.get("/")
-async def view_all_transfers() -> dict:
+async def view_all_transfers(transfer_service: BudgetTransfer = Depends(get_transfer_service)) -> dict:
     transfers_list = transfer_service.get_all_transfers()
     transfers = {}
     for transfer in transfers_list:
@@ -25,16 +18,18 @@ async def view_all_transfers() -> dict:
     return transfers
 
 @router.post("/")
-async def add_transfer(transfer: dict) -> Transfer:
+async def add_transfer(transfer: dict,
+                       transfer_service: BudgetTransfer = Depends(get_transfer_service)) -> Transfer:
     sender_id = int(transfer["sender_id"])
     receiver_id = int(transfer["receiver_id"])
     amount = Decimal(transfer["amount"])
     description = str(transfer["description"])
-    created_on = date(transfer["created_on"])
+    created_on = date.fromisoformat(transfer["created_on"])
     new_transfer = transfer_service.add_transfer(sender_id, receiver_id, amount, 
                                                  description, created_on)
     return new_transfer
 
 @router.delete("/{transfer_id}")
-async def delete_category(transfer_id: int) -> bool:
+async def delete_transfer(transfer_id: int,
+                          transfer_service: BudgetTransfer = Depends(get_transfer_service)) -> bool:
     return transfer_service.delete_transfer(transfer_id)

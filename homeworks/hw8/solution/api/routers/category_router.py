@@ -1,20 +1,14 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from services.category_service import BudgetCategory
-from repository.category_repository import CategoryRepo
 from models.category import Category, CategoryType
-from repository.csv_accessor import CsvFileAccessor
+from api.dependencies import get_category_service
 
 router = APIRouter(prefix = "/categories", tags = ["Categories"])
 
-ACCOUNTS_CSV_PATH = "data/categories.csv"
-ACCOUNTS_HEADERS = ["id", "name", "type"]
 
-accessor = CsvFileAccessor(ACCOUNTS_CSV_PATH, ACCOUNTS_HEADERS)
-repo = CategoryRepo(accessor)
-category_service = BudgetCategory(repo)
 
 @router.get("/")
-async def view_all_categories() -> dict:
+async def view_all_categories(category_service: BudgetCategory = Depends(get_category_service)) -> dict:
     categories_list = category_service.get_all_categories()
     categories = {}
     for category in categories_list:
@@ -22,12 +16,14 @@ async def view_all_categories() -> dict:
     return categories
 
 @router.post("/")
-async def add_category(category: dict) -> Category:
+async def add_category(category: dict,
+                       category_service: BudgetCategory = Depends(get_category_service)) -> Category:
     category_name = str(category["name"])
     category_type = CategoryType(category["type"])
     new_category = category_service.add_category(name = category_name, type = category_type)
     return new_category
 
 @router.delete("/{category_id}")
-async def delete_category(category_id: int) -> bool:
+async def delete_category(category_id: int,
+                          category_service: BudgetCategory = Depends(get_category_service)) -> bool:
     return category_service.delete_category(category_id)
