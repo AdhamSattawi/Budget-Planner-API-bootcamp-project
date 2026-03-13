@@ -2,6 +2,7 @@ import requests
 
 BASE_URL = "http://127.0.0.1:8000"
 
+
 def accounts_handler(user_option):
     match user_option:
         case 1:
@@ -17,30 +18,33 @@ def accounts_handler(user_option):
         case 6:
             view_net_worth()
 
+
 def view_all_accounts() -> None:
     print("===== All Accounts =====")
     try:
         response = requests.get(f"{BASE_URL}/accounts/")
-        response.raise_for_status()
-        all_accounts = response.json()
-        print("Account ID _ Account Name : Current Balance $\n")
-        for acc_key, balance in all_accounts.items():
-            print(f"{acc_key} : ${balance}")
-    except Exception as e:
-        print(f"[Error] something went wrong: {e}")
+    except Exception as error:
+        print(f"[Error] something went wrong: {error}")
+    response.raise_for_status()
+    all_accounts = response.json()
+    print("Account ID _ Account Name : Current Balance $\n")
+    for acc_key, balance in all_accounts.items():
+        print(f"{acc_key} : ${balance}")
+
 
 def view_single_balance() -> None:
     print("===== Account =====")
     view_all_accounts()
     print("=" * 10, end="\n")
     acc_id = int(input("Please enter account id from the list above: "))
-    try: 
+    try:
         response = requests.get(f"{BASE_URL}/accounts/{acc_id}")
-        response.raise_for_status()
-        account = response.json()
-        print(f"Account Balance: ${account["account_balance"]}")
-    except Exception as e:
-        print(f"[Error] something went wrong: {e}")
+    except Exception as error:
+        print(f"[Error] something went wrong: {error}")
+    response.raise_for_status()
+    account = response.json()
+    print(f"Account Balance: ${account["account_balance"]}")
+
 
 def add_account() -> None:
     print("===== Add New Account =====")
@@ -49,44 +53,46 @@ def add_account() -> None:
     new_account = {"name": name, "opening_balance": balance}
     try:
         response = requests.post(f"{BASE_URL}/accounts/", json=new_account)
-        response.raise_for_status()
-        print("Account added successfully!")
-    except Exception as e:
-        print(f"[Error] something went wrong: {e}")
+    except Exception as error:
+        print(f"[Error] something went wrong: {error}")
+    response.raise_for_status()
+    print("Account added successfully!")
+
 
 def edit_account_name() -> None:
     print("===== Edit Account Name =====")
     view_all_accounts()
     print("=" * 10, end="\n")
+    acc_id = int(input("Please enter account id from the list above: "))
+    new_name = input("Enter the new account name: ")
+    new_acc = {"new_name": new_name}
     try:
-        acc_id = int(input("Please enter account id from the list above: "))
-        new_name = input("Enter the new account name: ")
-        new_acc = {"new_name": new_name}
         response = requests.put(f"{BASE_URL}/accounts/{acc_id}", json=new_acc)
-        response.raise_for_status()
-        print("Account name updated successfully!")
-    except Exception as e:
-        print(f"[Error] something went wrong: {e}")
+    except Exception as error:
+        print(f"[Error] something went wrong: {error}")
+    response.raise_for_status()
+    print("Account name updated successfully!")
+
 
 def delete_account() -> None:
     print("===== Delete Account =====")
     view_all_accounts()
     print("=" * 10, end="\n")
+    acc_id = int(input("Please enter account id to delete: "))
     try:
-        acc_id = int(input("Please enter account id to delete: "))
         response = requests.delete(f"{BASE_URL}/accounts/{acc_id}")
-        response.raise_for_status()
-        print("Account deleted successfully!")
-    except Exception as e:
-        print(f"[Error] something went wrong: {e}")
+    except Exception as error:
+        print(f"[Error] something went wrong: {error}")
+    response.raise_for_status()
+    print("Account deleted successfully!")
+
 
 def view_net_worth() -> None:
     print("===== Net Worth =====")
     try:
         response = requests.get(f"{BASE_URL}/accounts/net_worth")
-        response.raise_for_status()
-        data = response.json()
-        print(f"Total Net Worth: ${data['net_worth']}")
-    except Exception as e:
-        print(f"[Error] something went wrong: {e}")
-
+    except Exception as error:
+        print(f"[Error] something went wrong: {error}")
+    response.raise_for_status()
+    data = response.json()
+    print(f"Total Net Worth: ${data['net_worth']}")

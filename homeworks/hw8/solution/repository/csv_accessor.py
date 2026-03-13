@@ -1,5 +1,6 @@
 import csv
 
+
 class CsvFileAccessor:
     def __init__(self, file_path: str, field_names: list[str]) -> None:
         self.file_path = file_path
@@ -7,25 +8,25 @@ class CsvFileAccessor:
 
     def reading(self) -> list[dict]:
         try:
-            with open(self.file_path, "r") as f:
-                csvfile = csv.DictReader(f)
+            with open(self.file_path, "r") as file:
+                csvfile = csv.DictReader(file)
                 return list(csvfile)
 
         except FileNotFoundError:
-            return[]
+            return []
 
     def writing(self, data: list[dict]) -> None:
         try:
-            with open(self.file_path, "w", newline = "") as f:
-                csvfile = csv.DictWriter(f, self.field_names)
+            with open(self.file_path, "w", newline="") as file:
+                csvfile = csv.DictWriter(file, self.field_names)
                 csvfile.writeheader()
                 csvfile.writerows(data)
 
-        except Exception as e:
-            raise CsvWritingError("[Error] something went wrong with writing on the csv.") from e
-            
+        except Exception as error:
+            raise CsvWritingError(
+                "[Error] something went wrong with writing on the csv."
+            ) from error
+
 
 class CsvWritingError(Exception):
     """Raise when there is a problem with writing on the csv file."""
-    pass
-

@@ -6,4 +6,4 @@ from decimal import Decimal
 class Account:
     id: int
     name: str
-    opening_balance: Decimal 
+    opening_balance: Decimal

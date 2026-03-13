@@ -3,9 +3,11 @@ from decimal import Decimal
 from enum import Enum
 from datetime import date
 
+
 class TransactionType(Enum):
     income = "income"
     expense = "expense"
+
 
 @dataclass
 class Transaction:
