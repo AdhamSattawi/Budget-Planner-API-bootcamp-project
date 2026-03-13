@@ -59,6 +59,9 @@ async def update_account_name(
     account_id: int,
     new_updates: dict,
     account_service: Annotated[BudgetAccount, Depends(get_account_service)],
-) -> Account:
+) -> Account | None:
     new_name = new_updates["new_name"]
-    return account_service.edit_account(account_id, new_name)
+    new_account = account_service.edit_account(account_id, new_name)
+    if not new_account:
+        return None
+    return new_account

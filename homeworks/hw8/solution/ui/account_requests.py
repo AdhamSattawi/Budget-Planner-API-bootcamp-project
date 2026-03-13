@@ -3,7 +3,7 @@ import requests
 BASE_URL = "http://127.0.0.1:8000"
 
 
-def accounts_handler(user_option):
+def accounts_handler(user_option: int) -> None:
     match user_option:
         case 1:
             view_all_accounts()

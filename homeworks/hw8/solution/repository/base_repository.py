@@ -1,8 +1,11 @@
 from abc import ABC, abstractmethod
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, Protocol
 from solution.repository.csv_accessor import CsvFileAccessor
 
-ModelType = TypeVar("ModelType")
+class HasId(Protocol):
+    id: int
+
+ModelType = TypeVar("ModelType", bound = HasId)
 
 
 class BaseRepository(ABC, Generic[ModelType]):

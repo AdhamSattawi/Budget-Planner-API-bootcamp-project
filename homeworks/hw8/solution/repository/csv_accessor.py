@@ -1,8 +1,8 @@
 import csv
-
+from typing import Sequence
 
 class CsvFileAccessor:
-    def __init__(self, file_path: str, field_names: list[str]) -> None:
+    def __init__(self, file_path: str, field_names: Sequence[str]) -> None:
         self.file_path = file_path
         self.field_names = field_names
 

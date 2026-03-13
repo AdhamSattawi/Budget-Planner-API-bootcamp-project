@@ -30,11 +30,13 @@ class BudgetAccount:
             return False
 
     def edit_account(self, account_id: int, new_name: str) -> Account | None:
-        account = self._get_account(account_id)
+        account = self._get_account(account_id) 
+        if not account:
+            return None
         account.name = new_name
         return self.repo.update(account)
 
-    def get_balance(self, account_id) -> Decimal | None:
+    def get_balance(self, account_id: int) -> Decimal | None:
         account = self._get_account(account_id)
         opening_balance = account.opening_balance if account else Decimal(0)
         transactions = self._account_transactions(account_id)
@@ -42,7 +44,7 @@ class BudgetAccount:
         balance = opening_balance + transactions + transfers
         return balance
 
-    def get_all_accounts(self) -> list[tuple[Account, Decimal]]:
+    def get_all_accounts(self) -> list[tuple[Account, Decimal | None]]:
         accounts = self.repo.get_all()
         if not accounts:
             return []
@@ -54,7 +56,12 @@ class BudgetAccount:
 
     def get_net_worth(self) -> Decimal:
         accounts = self.repo.get_all()
-        return sum(self.get_balance(account.id) for account in accounts)
+        total = Decimal(0)
+        for account in accounts:
+            balance = self.get_balance(account.id)
+            if balance is not None:
+                total += balance
+        return total
 
     def _get_account(self, account_id: int) -> Account | None:
         account = self.repo.get(account_id)

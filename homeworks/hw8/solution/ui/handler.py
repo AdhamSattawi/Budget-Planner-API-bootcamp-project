@@ -9,7 +9,7 @@ CATEGORY_OPTIONS = range(7, 10)
 TRANSACTION_OPTIONS = range(10, TRANSACTION_END)
 
 
-def handle_action(user_option: int):
+def handle_action(user_option: int) -> None:
     if user_option in ACCOUNT_OPTIONS:
         accounts_handler(user_option)
     elif user_option in CATEGORY_OPTIONS:
