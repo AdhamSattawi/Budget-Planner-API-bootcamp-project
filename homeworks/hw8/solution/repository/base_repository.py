@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar
-from csv_accessor import CsvFileAccessor
+from solution.repository.csv_accessor import CsvFileAccessor
 
 T = TypeVar("T")
 

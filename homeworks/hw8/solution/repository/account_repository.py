@@ -1,5 +1,5 @@
-from base_repository import BaseRepository
-from models.account import Account
+from solution.repository.base_repository import BaseRepository
+from solution.models.account import Account
 from decimal import Decimal
 
 

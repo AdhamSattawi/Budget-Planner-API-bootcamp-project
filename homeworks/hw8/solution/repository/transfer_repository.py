@@ -1,5 +1,5 @@
-from base_repository import BaseRepository
-from models.transfer import Transfer
+from solution.repository.base_repository import BaseRepository
+from solution.models.transfer import Transfer
 from decimal import Decimal
 from datetime import date
 

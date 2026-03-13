@@ -1,5 +1,5 @@
-from prints import welcome_message, menu, user_selection
-from handler import handle_action
+from solution.ui.prints import welcome_message, menu, user_selection
+from solution.ui.handler import handle_action
 
 def budget_app_start() -> None:
     """This function runs the UI"""

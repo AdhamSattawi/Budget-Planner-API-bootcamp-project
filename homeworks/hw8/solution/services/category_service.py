@@ -1,5 +1,5 @@
-from models.category import Category
-from repository.category_repository import CategoryRepo, CategoryType
+from solution.models.category import Category
+from solution.repository.category_repository import CategoryRepo, CategoryType
 
 
 class BudgetCategory:
@@ -23,13 +23,13 @@ class BudgetCategory:
     
     def add_defaults(self) -> None:
         if len(self.repo.get_all()) == 0:
-            self.add_category(name = "Rent", type = "expense")
-            self.add_category(name = "Freelancing", type = "income")
-            self.add_category(name = "Groceries", type = "expense")
-            self.add_category(name = "Work", type = "income")
-            self.add_category(name = "SideHustle", type = "income")
-            self.add_category(name = "Electronics", type = "expense")
-            self.add_category(name = "HomeStuff", type = "expense")
-            self.add_category(name = "CarMaintanance", type = "expense")
-            self.add_category(name = "SelfCare", type = "expense")
-            self.add_category(name = "Resturants", type = "expense")
+            self.add_category(name = "Rent", type = CategoryType.expense)
+            self.add_category(name = "Freelancing", type = CategoryType.income)
+            self.add_category(name = "Groceries", type = CategoryType.expense)
+            self.add_category(name = "Work", type = CategoryType.income)
+            self.add_category(name = "SideHustle", type = CategoryType.income)
+            self.add_category(name = "Electronics", type = CategoryType.expense)
+            self.add_category(name = "HomeStuff", type = CategoryType.expense)
+            self.add_category(name = "CarMaintanance", type = CategoryType.expense)
+            self.add_category(name = "SelfCare", type = CategoryType.expense)
+            self.add_category(name = "Resturants", type = CategoryType.expense)

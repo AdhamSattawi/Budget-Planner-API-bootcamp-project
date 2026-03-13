@@ -1,5 +1,5 @@
-from base_repository import BaseRepository
-from models.category import Category, CategoryType
+from solution.repository.base_repository import BaseRepository
+from solution.models.category import Category, CategoryType
 
 
 
@@ -15,5 +15,5 @@ class CategoryRepo(BaseRepository[Category]):
     def _to_dict(self, category: Category) -> dict:
         id = category.id
         name = category.name
-        type = category.type
-        return {"id" : id, "name" : name, "type" : type.value}
+        type = category.type.value
+        return {"id" : id, "name" : name, "type" : type}

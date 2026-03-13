@@ -1,5 +1,5 @@
-from base_repository import BaseRepository
-from models.transaction import Transaction, TransactionType
+from solution.repository.base_repository import BaseRepository
+from solution.models.transaction import Transaction, TransactionType
 from decimal import Decimal
 from datetime import date
 
@@ -26,7 +26,7 @@ class TransactionRepo(BaseRepository[Transaction]):
     
     def _to_dict(self, transaction: Transaction) -> dict:
         id = transaction.id
-        type = transaction.type
+        type = transaction.type.value
         amount = transaction.amount 
         description = transaction.description
         category_id = transaction.category_id

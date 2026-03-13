@@ -1,8 +1,9 @@
 from decimal import Decimal
-from repository.account_repository import AccountRepo
-from models.account import Account
-from transaction_service import BudgetTransaction
-from transfer_service import BudgetTransfer
+from solution.repository.account_repository import AccountRepo
+from solution.models.account import Account
+from solution.models.transaction import Transaction, TransactionType
+from solution.services.transaction_service import BudgetTransaction
+from solution.services.transfer_service import BudgetTransfer
 
 class BudgetAccount:
     def __init__(self, repo: AccountRepo, transaction_service: BudgetTransaction, 
@@ -45,10 +46,10 @@ class BudgetAccount:
     
     def _account_transactions(self, account_id: int) -> Decimal:
         transactions = self.transaction_service.get_by_account(account_id)
-        account_incomes: Decimal = 0
-        account_expenses: Decimal = 0
+        account_incomes: Decimal = Decimal(0)
+        account_expenses: Decimal = Decimal(0)
         for transaction in transactions:
-            if transaction.type == "expense":
+            if transaction.type == TransactionType.expense:
                 account_expenses += transaction.amount
             else:
                 account_incomes += transaction.amount
@@ -56,8 +57,8 @@ class BudgetAccount:
     
     def _account_transfers(self, account_id: int) -> Decimal:
         transfers = self.transfer_service.get_by_account(account_id)
-        account_transfers_in: Decimal = 0
-        account_transfers_out: Decimal = 0
+        account_transfers_in: Decimal = Decimal(0)
+        account_transfers_out: Decimal = Decimal(0)
         for transfer in transfers:
             if transfer.receiver_id == account_id:
                 account_transfers_in += transfer.amount

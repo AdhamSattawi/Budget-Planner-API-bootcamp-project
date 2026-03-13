@@ -1,7 +1,7 @@
 from datetime import date
 from decimal import Decimal
-from models.transfer import Transfer
-from repository.transfer_repository import TransferRepo
+from solution.models.transfer import Transfer
+from solution.repository.transfer_repository import TransferRepo
 
 class BudgetTransfer:
     def __init__(self, repo: TransferRepo):

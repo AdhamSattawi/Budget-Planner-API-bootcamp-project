@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
-from services.category_service import BudgetCategory
-from models.category import Category, CategoryType
-from api.dependencies import get_category_service
+from solution.services.category_service import BudgetCategory
+from solution.models.category import Category, CategoryType
+from solution.api.dependencies import get_category_service
 
 router = APIRouter(prefix = "/categories", tags = ["Categories"])
 

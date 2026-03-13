@@ -1,7 +1,7 @@
 from datetime import date
 from decimal import Decimal
-from models.transaction import Transaction, TransactionType
-from repository.transaction_repository import TransactionRepo
+from solution.models.transaction import Transaction, TransactionType
+from solution.repository.transaction_repository import TransactionRepo
 
 class BudgetTransaction:
     def __init__(self, repo: TransactionRepo):

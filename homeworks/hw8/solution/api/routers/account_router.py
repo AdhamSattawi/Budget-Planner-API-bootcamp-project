@@ -1,8 +1,8 @@
 from decimal import Decimal
 from fastapi import APIRouter, Depends
-from models.account import Account
-from api.dependencies import get_account_service
-from services.accounts_service import BudgetAccount
+from solution.models.account import Account
+from solution.api.dependencies import get_account_service
+from solution.services.accounts_service import BudgetAccount
 
 router = APIRouter(prefix = "/accounts", tags = ["Accounts"])
 

@@ -1,9 +1,9 @@
 from datetime import date
 from decimal import Decimal
 from fastapi import APIRouter, Depends
-from models.transfer import Transfer
-from services.transfer_service import BudgetTransfer
-from api.dependencies import get_transfer_service
+from solution.models.transfer import Transfer
+from solution.services.transfer_service import BudgetTransfer
+from solution.api.dependencies import get_transfer_service
 
 router = APIRouter(prefix = "/transfers", tags = ["Transfers"])
 
