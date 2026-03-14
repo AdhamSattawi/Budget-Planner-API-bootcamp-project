@@ -1,7 +1,7 @@
 from solution.repository.base_repository import BaseRepository
-from solution.models.transaction import TransactionsORM
+from solution.models.transaction import TransactionORM
 
 
-class TransactionRepo(BaseRepository[TransactionsORM]):
+class TransactionRepo(BaseRepository[TransactionORM]):
     def __init__(self):
-        super().__init__(TransactionsORM)
+        super().__init__(TransactionORM)

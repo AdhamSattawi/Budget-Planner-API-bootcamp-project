@@ -1,4 +1,3 @@
-from solution.repository.csv_accessor import CsvFileAccessor
 
 from solution.repository.account_repository import AccountRepo
 from solution.repository.category_repository import CategoryRepo
@@ -10,52 +9,12 @@ from solution.services.category_service import BudgetCategory
 from solution.services.transaction_service import BudgetTransaction
 from solution.services.transfer_service import BudgetTransfer
 
-ID = "id"
-
-ACCOUNTS_CSV_PATH = "data/accounts.csv"
-ACCOUNTS_HEADERS = (ID, "name", "opening_balance")
-
-CATEGORIES_CSV_PATH = "data/categories.csv"
-CATEGORIES_HEADERS = (ID, "name", "type")
-
-TRANSACTIONS_CSV_PATH = "data/transactions.csv"
-TRANSACTIONS_HEADERS = (
-    ID,
-    "type",
-    "amount",
-    "description",
-    "category_id",
-    "account_id",
-    "created_on",
-)
-
-TRANSFERS_CSV_PATH = "data/transfers.csv"
-TRANSFERS_HEADERS = (
-    ID,
-    "sender_id",
-    "receiver_id",
-    "amount",
-    "description",
-    "created_on",
-)
-
-trf_accessor = CsvFileAccessor(TRANSFERS_CSV_PATH, TRANSFERS_HEADERS)
-trf_repo = TransferRepo(trf_accessor)
-transfer_service = BudgetTransfer(trf_repo)
-
-trn_accessor = CsvFileAccessor(TRANSACTIONS_CSV_PATH, TRANSACTIONS_HEADERS)
-trn_repo = TransactionRepo(trn_accessor)
-transaction_service = BudgetTransaction(trn_repo)
-
-acc_accessor = CsvFileAccessor(ACCOUNTS_CSV_PATH, ACCOUNTS_HEADERS)
-acc_repo = AccountRepo(acc_accessor)
+transfer_service = BudgetTransfer()
+transaction_service = BudgetTransaction()
 account_service = BudgetAccount(
-    acc_repo, transaction_service=transaction_service, transfer_service=transfer_service
+    transaction_service=transaction_service, transfer_service=transfer_service
 )
-
-cat_accessor = CsvFileAccessor(CATEGORIES_CSV_PATH, CATEGORIES_HEADERS)
-cat_repo = CategoryRepo(cat_accessor)
-category_service = BudgetCategory(cat_repo)
+category_service = BudgetCategory()
 
 
 def get_account_service() -> BudgetAccount:

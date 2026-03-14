@@ -1,35 +1,51 @@
-from solution.models.category import Category
-from solution.repository.category_repository import CategoryRepo, CategoryType
+from solution.models.category import Category, CategoryType
+from solution.repository.category_repository import CategoryRepo, CategoryORM
+from typing import Optional
+from solution.database import async_session_maker
+
+
+def _orm_to_dataclass(category: CategoryORM) -> Category:
+    return Category(id=category.id, name=category.name, type=category.type)
 
 
 class BudgetCategory:
-    def __init__(self, repo: CategoryRepo):
-        self.repo = repo
-        self.add_defaults()
+    def __init__(self, repo: Optional[CategoryRepo] = None, session_maker=None) -> None:
+        self.repo = repo or CategoryRepo()
+        self._session_maker = session_maker or async_session_maker
 
-    def get_all_categories(self) -> list[Category]:
-        return self.repo.get_all()
+    async def get_all_categories(self) -> list[Category]:
+        async with self._session_maker() as session:
+            orm_categories = await self.repo.get_all(session)
+            categories = []
+            for orm_category in orm_categories:
+                transfer = _orm_to_dataclass(orm_category)
+                categories.append(transfer)
+            return categories
 
-    def add_category(self, name: str, type: CategoryType) -> Category:
-        new_category = Category(id=0, name=name, type=type)
-        return self.repo.create(new_category)
+    async def add_category(self, name: str, type: CategoryType) -> Category:
+        async with self._session_maker() as session:
+            async with session.begin():
+                new_category = CategoryORM(name=name, type=type)
+                created_cat = await self.repo.create(session, new_category)
+                return _orm_to_dataclass(created_cat)
 
-    def delete_category(self, category_id: int) -> bool:
-        category = self.repo.get(category_id)
-        if not category:
-            return False
-        self.repo.delete(category_id)
-        return True
+    async def delete_category(self, category_id: int) -> bool:
+        async with self._session_maker() as session:
+            async with session.begin():
+                return await self.repo.delete(session, category_id)
 
-    def add_defaults(self) -> None:
-        if len(self.repo.get_all()) == 0:
-            self.add_category(name="Rent", type=CategoryType.expense)
-            self.add_category(name="Freelancing", type=CategoryType.income)
-            self.add_category(name="Groceries", type=CategoryType.expense)
-            self.add_category(name="Work", type=CategoryType.income)
-            self.add_category(name="SideHustle", type=CategoryType.income)
-            self.add_category(name="Electronics", type=CategoryType.expense)
-            self.add_category(name="HomeStuff", type=CategoryType.expense)
-            self.add_category(name="CarMaintanance", type=CategoryType.expense)
-            self.add_category(name="SelfCare", type=CategoryType.expense)
-            self.add_category(name="Resturants", type=CategoryType.expense)
+    async def add_defaults(self) -> None:
+        async with self._session_maker() as session:
+            if len(await self.repo.get_all(session)) == 0:
+                await self.add_category(name="Rent", type=CategoryType.expense)
+                await self.add_category(name="Freelancing", type=CategoryType.income)
+                await self.add_category(name="Groceries", type=CategoryType.expense)
+                await self.add_category(name="Work", type=CategoryType.income)
+                await self.add_category(name="SideHustle", type=CategoryType.income)
+                await self.add_category(name="Electronics", type=CategoryType.expense)
+                await self.add_category(name="HomeStuff", type=CategoryType.expense)
+                await self.add_category(
+                    name="CarMaintanance", type=CategoryType.expense
+                )
+                await self.add_category(name="SelfCare", type=CategoryType.expense)
+                await self.add_category(name="Resturants", type=CategoryType.expense)

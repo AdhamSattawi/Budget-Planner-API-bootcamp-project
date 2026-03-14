@@ -1,17 +1,37 @@
 from datetime import datetime
 from decimal import Decimal
-from solution.models.transfer import Transfer
+from solution.models.transfer import Transfer, TransferORM
 from solution.repository.transfer_repository import TransferRepo
+from typing import Optional
+from solution.database import async_session_maker
+
+
+def _orm_to_dataclass(transfer: TransferORM) -> Transfer:
+    return Transfer(
+        id=transfer.id,
+        sender_id=transfer.sender_id,
+        receiver_id=transfer.receiver_id,
+        amount=transfer.amount,
+        description=transfer.description,
+        created_on=transfer.created_on,
+    )
 
 
 class BudgetTransfer:
-    def __init__(self, repo: TransferRepo):
-        self.repo = repo
+    def __init__(self, repo: Optional[TransferRepo] = None, session_maker=None) -> None:
+        self.repo = repo or TransferRepo()
+        self._session_maker = session_maker or async_session_maker
 
-    def get_all_transfers(self) -> list[Transfer]:
-        return self.repo.get_all()
+    async def get_all_transfers(self) -> list[Transfer]:
+        async with self._session_maker() as session:
+            orm_transfers = await self.repo.get_all(session)
+            transfers = []
+            for orm_transfer in orm_transfers:
+                transfer = _orm_to_dataclass(orm_transfer)
+                transfers.append(transfer)
+            return transfers
 
-    def add_transfer(
+    async def add_transfer(
         self,
         sender_id: int,
         receiver_id: int,
@@ -19,25 +39,25 @@ class BudgetTransfer:
         description: str,
         created_on: datetime,
     ) -> Transfer:
-        new_transfer = Transfer(
-            id=0,
-            sender_id=sender_id,
-            receiver_id=receiver_id,
-            amount=amount,
-            description=description,
-            created_on=created_on,
-        )
-        return self.repo.create(new_transfer)
+        async with self._session_maker() as session:
+            async with session.begin():
+                new_transfer = TransferORM(
+                    sender_id=sender_id,
+                    receiver_id=receiver_id,
+                    amount=amount,
+                    description=description,
+                    created_on=created_on,
+                )
+                created_transfer = await self.repo.create(session, new_transfer)
+                return _orm_to_dataclass(created_transfer)
 
-    def delete_transfer(self, transfer_id: int) -> bool:
-        transfer = self.repo.get(transfer_id)
-        if not transfer:
-            return False
-        self.repo.delete(transfer_id)
-        return True
+    async def delete_transfer(self, transfer_id: int) -> bool:
+        async with self._session_maker() as session:
+            async with session.begin():
+                return await self.repo.delete(session, transfer_id)
 
-    def get_by_account(self, account_id: int) -> list[Transfer]:
-        transfers = self.get_all_transfers()
+    async def get_by_account(self, account_id: int) -> list[Transfer]:
+        transfers = await self.get_all_transfers()
         account_transfers = [
             transfer
             for transfer in transfers
