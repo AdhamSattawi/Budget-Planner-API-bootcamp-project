@@ -23,7 +23,7 @@ class Transaction:
 
 DESC_MAX_CHR = 300
 
-class TransactionsORM(Base):
+class TransactionORM(Base):
     __tablename__ = "transactions"
 
     id: Mapped[int] = mapped_column(Integer, primary_key = True, autoincrement = True)

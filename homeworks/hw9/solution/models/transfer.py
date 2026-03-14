@@ -16,7 +16,7 @@ class Transfer:
 
 DESC_MAX_CHR = 300
 
-class TransfersORM(Base):
+class TransferORM(Base):
     __tablename__ = "transfers"
 
     id: Mapped[int] = mapped_column(Integer, primary_key = True, autoincrement = True)

@@ -1,6 +1,6 @@
-from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, Protocol
-from solution.repository.csv_accessor import CsvFileAccessor
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 class HasId(Protocol):
     id: int
@@ -8,65 +8,36 @@ class HasId(Protocol):
 ModelType = TypeVar("ModelType", bound = HasId)
 
 
-class BaseRepository(ABC, Generic[ModelType]):
-    def __init__(self, accessor: CsvFileAccessor) -> None:
-        self.accessor = accessor
+class BaseRepository(Generic[ModelType]):
+    def __init__(self, model_class: type[ModelType]):
+        self.model_class = model_class
 
-    def create(self, item: ModelType) -> ModelType:
-        item_new_id = self._get_next_id()
-        item.id = item_new_id
-        data = self.get_all()
-        data.append(item)
-        data_of_dicts = [self._to_dict(obj) for obj in data]
-        self.accessor.writing(data_of_dicts)
+    async def create(self, session: AsyncSession, item: ModelType) -> ModelType:
+        session.add(item)
+        await session.flush()
+        await session.refresh(item)
         return item
 
-    def get(self, item_id: int) -> ModelType | None:
-        data = self.get_all()
-        for item in data:
-            if item.id == item_id:
-                return item
-        return None
+    async def get(self, session: AsyncSession, item_id: int) -> ModelType | None:
+        return await session.get(self.model_class, item_id)
+        
+    async def get_all(self, session: AsyncSession) -> list[ModelType]:
+        stmt = select(self.model_class)
+        db_data = await session.scalars(stmt)
+        return list(db_data.all())
 
-    def get_all(self) -> list[ModelType]:
-        csv_data = self.accessor.reading()
-        data = [self._to_entity(item) for item in csv_data]
-        return data
-
-    def update(self, item: ModelType) -> ModelType | None:
-        data = self.get_all()
-        new_data = []
-        for obj in data:
-            if obj.id == item.id:
-                new_data.append(item)
-            else:
-                new_data.append(obj)
-
-        if data == new_data:
+    async def update(self, session: AsyncSession, item: ModelType) -> ModelType | None:
+        to_update = await self.get(session, item.id)
+        if not to_update:
             return None
+        updated_item = await session.merge(item)
+        await session.flush()
+        return updated_item
 
-        data_of_dicts = [self._to_dict(entry) for entry in new_data]
-        self.accessor.writing(data_of_dicts)
-        return item
-
-    def delete(self, item_id: int) -> None:
-        data = self.get_all()
-        new_data = [item for item in data if item.id != item_id]
-        data_of_dicts = [self._to_dict(obj) for obj in new_data]
-        self.accessor.writing(data_of_dicts)
-
-    def _get_next_id(self) -> int:
-        data = self.get_all()
-        if not data:
-            return 1
-        items_id = [item.id for item in data]
-        max_id = max(items_id)
-        return max_id + 1
-
-    @abstractmethod
-    def _to_entity(self, item: dict) -> ModelType:
-        ...
-
-    @abstractmethod
-    def _to_dict(self, item: ModelType) -> dict:
-        ...
+    async def delete(self, session: AsyncSession, item_id: int) -> bool:
+        item = await self.get(session, item_id)
+        if not item:
+            return False
+        await session.delete(item)
+        await session.flush()
+        return True

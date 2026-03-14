@@ -80,6 +80,7 @@ alembic upgrade head
 
 - You may use GenAI to help you in everything related to Migrations and Alembic configuration.
 
+**Linters and Formatters**: All Alembic related files, such as `env.py` or migration scripts should be IGNORED by linters and formatters. Please edit your `setup.cfg` to exclude these files from `flake8`, `black`, and `mypy` checks. 
 
 #### Option 2 — Manual Schema Creation
 
