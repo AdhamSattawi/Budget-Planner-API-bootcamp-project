@@ -1,41 +1,41 @@
-# CodeValue Backend Bootcamp 2026 🚀
+# Budget Planner API 🚀
 
 **Author:** Adham Sattawi
-**Role:** Backend Developer Trainee
-**Status:** Active 🟢
+**Role:** Backend Developer
 
 ---
 
 ## 📖 About
 
-This repository serves as the central hub for all practical exercises, coding challenges, and projects completed during the CodeValue Backend Development Bootcamp.
+The Budget Planner API is a robust backend service developed for managing personal finances. It was built with a strong emphasis on **Clean Architecture**, **Domain-Driven Design (DDD)**, and modern Python enterprise best practices.
 
-The codebase reflects a progression from core Python fundamentals to advanced backend architecture, emphasizing **Clean Code** and **Scalable Design Patterns**.
+This flagship project represents the capstone of my CodeValue Backend Development training, transitioning from fundamental Python techniques to a mature, scalable API architecture.
 
 ---
 
 ## 🛠️ Technology Stack
 
-* **Language:** Python 3.14+
-* **API:** FastAPI
-* **Testing:** Pytest
-* **Linting & Formatting:** Flake8, Black, Wemake-python-styleguide (WPS)
-* **Type Checking:** MyPy
-* **Version Control:** Git & GitHub
+- **Framework:** FastAPI (Asynchronous API framework)
+- **Database:** SQLAlchemy 2.0 (Async ORM)
+- **Migrations:** Alembic
+- **Testing:** Pytest & Pytest-Asyncio
+- **Code Quality:** Flake8, Black, MyPy, and Wemake-python-styleguide (WPS)
+- **Concurrency:** Asyncio for high-performance I/O operations
 
 ---
 
-## 📂 Repository Structure
+## 📂 Architecture
 
-The repository is organized by modules, mirroring the bootcamp curriculum:
+The project adopts a layered **Clean Architecture** pattern, ensuring clear separation of concerns, testability, and maintainability:
 
-| Module           | Topic           | Key Concepts                                 |
-| ---------------- | --------------- | -------------------------------------------- |
-| M01 - Setup      | Environment     | venv, VSCode Config, Hello World             |
+- **`api/` (Controllers):** FastAPI routers handling incoming HTTP requests, input validation, and HTTP responses.
+- **`services/` (Use Cases):** Centralized business logic, transaction management, and coordination of domain entities.
+- **`repository/` (Data Access):** Abstraction over the database using SQLAlchemy, isolating the ORM from business logic.
+- **`models/` (Domain & ORM):** Data representations and strictly-typed database schemas.
 
 ---
 
-## 🧪 How to Run
+## 🧪 Setup & Installation
 
 ### 1️⃣ Clone the repository
 
@@ -47,14 +47,12 @@ cd backend-bootcamp-CodeValue
 ### 2️⃣ Set up the virtual environment
 
 #### Windows
-
 ```bash
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 ```
 
 #### Linux / Mac
-
 ```bash
 python3 -m venv venv
 source venv/bin/activate
@@ -66,24 +64,42 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4️⃣ Run tests
+---
 
+## 🚀 Running the Project
+
+For a better developer experience, use the provided `Makefile`.
+
+*Note: For Windows without `make`, you can run the commands inside the Makefile directly.*
+
+### Start the API Server
 ```bash
-pytest
+make run
+# Or manually:
+# cd budget_planner_api && uvicorn api.main:app --reload
+```
+
+### Run Tests
+```bash
+make test
+# Or manually:
+# pytest budget_planner_api/tests/
+```
+
+### Run Linters & Type Checking
+```bash
+make lint
+# Or manually:
+# flake8 budget_planner_api/
+# mypy budget_planner_api/
 ```
 
 ---
 
-## 📈 Philosophy
+## 🗃️ Bootcamp Archive
 
-This repository adheres to **Production-Grade Standards**:
-
-* **Strict Typing:** Type hints are mandatory.
-* **Clean Architecture:** Clear separation of concerns.
-* **Documentation:** Comprehensive docstrings and README files.
+The historical exercises and assignments leading up to this capstone are preserved in the `bootcamp_archive` directory for reference. These reflect a clear progression of skill sets in core Python, object-oriented programming, concurrency, and web services.
 
 ---
 
-This project is part of the professional training track at **CodeValue**.
-
----
+This project was developed by Adham Sattawi as part of the professional backend track at **CodeValue**.

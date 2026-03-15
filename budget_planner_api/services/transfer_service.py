@@ -4,6 +4,8 @@ from solution.models.transfer import Transfer, TransferORM
 from solution.repository.transfer_repository import TransferRepo
 from typing import Optional
 from solution.database import async_session_maker
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 
 def _orm_to_dataclass(transfer: TransferORM) -> Transfer:
@@ -18,7 +20,7 @@ def _orm_to_dataclass(transfer: TransferORM) -> Transfer:
 
 
 class BudgetTransfer:
-    def __init__(self, repo: Optional[TransferRepo] = None, session_maker=None) -> None:
+    def __init__(self, repo: Optional[TransferRepo] = None, session_maker: AsyncSession = None) -> None:
         self.repo = repo or TransferRepo()
         self._session_maker = session_maker or async_session_maker
 

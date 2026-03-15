@@ -2,6 +2,8 @@ from solution.models.category import Category, CategoryType
 from solution.repository.category_repository import CategoryRepo, CategoryORM
 from typing import Optional
 from solution.database import async_session_maker
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 
 def _orm_to_dataclass(category: CategoryORM) -> Category:
@@ -9,7 +11,7 @@ def _orm_to_dataclass(category: CategoryORM) -> Category:
 
 
 class BudgetCategory:
-    def __init__(self, repo: Optional[CategoryRepo] = None, session_maker=None) -> None:
+    def __init__(self, repo: Optional[CategoryRepo] = None, session_maker: AsyncSession = None) -> None:
         self.repo = repo or CategoryRepo()
         self._session_maker = session_maker or async_session_maker
 

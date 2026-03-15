@@ -6,6 +6,8 @@ from solution.services.transaction_service import BudgetTransaction
 from solution.services.transfer_service import BudgetTransfer
 from typing import Optional
 from solution.database import async_session_maker
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 
 def _orm_to_dataclass(account: AccountORM) -> Account:
@@ -26,7 +28,7 @@ class BudgetAccount:
         transaction_service: BudgetTransaction,
         transfer_service: BudgetTransfer,
         repo: Optional[AccountRepo] = None,
-        session_maker = None,
+        session_maker: AsyncSession = None,
     ) -> None:
         self.repo = repo or AccountRepo()
         self.transaction_service = transaction_service

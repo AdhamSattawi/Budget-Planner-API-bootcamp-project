@@ -4,6 +4,8 @@ from solution.models.transaction import Transaction, TransactionType, Transactio
 from solution.repository.transaction_repository import TransactionRepo
 from typing import Optional
 from solution.database import async_session_maker
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 
 def _orm_to_dataclass(transaction: TransactionORM) -> Transaction:
@@ -19,7 +21,7 @@ def _orm_to_dataclass(transaction: TransactionORM) -> Transaction:
 
 
 class BudgetTransaction:
-    def __init__(self, repo: Optional[TransactionRepo] = None, session_maker=None) -> None:
+    def __init__(self, repo: Optional[TransactionRepo] = None, session_maker: AsyncSession = None) -> None:
         self.repo = repo or TransactionRepo()
         self._session_maker = session_maker or async_session_maker
 
