@@ -7,7 +7,7 @@
 
 ## 📖 About
 
-The Budget Planner API is a robust backend service developed for managing personal finances. It was built with a strong emphasis on **Clean Architecture**, **Domain-Driven Design (DDD)**, and modern Python enterprise best practices.
+The Budget Planner API is a robust backend service developed for managing personal finances. It was built with a strong emphasis on **Clean Architecture**, **N-Layer Design**, and modern Python enterprise best practices.
 
 This flagship project represents the capstone of my CodeValue Backend Development training, transitioning from fundamental Python techniques to a mature, scalable API architecture.
 
