@@ -6,6 +6,9 @@ export PYTHONPATH := $(PWD)
 run:
 	cd budget_planner_api && uvicorn api.main:app --reload
 
+run-ui:
+	cd budget_planner_api && python -m ui.app_ui
+
 test:
 	pytest budget_planner_api/tests/
 

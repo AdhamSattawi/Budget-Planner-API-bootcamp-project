@@ -75,8 +75,20 @@ For a better developer experience, use the provided `Makefile`.
 ### Start the API Server
 ```bash
 make run
-# Or manually:
-# cd budget_planner_api && uvicorn api.main:app --reload
+# Or manually from the root directory:
+# cd budget_planner_api
+# uvicorn api.main:app --reload
+# Or using the Python module execution:
+# cd budget_planner_api
+# python -m api.main
+```
+
+### Start the UI APP
+```bash
+make run-ui
+# Or manually from the root directory:
+# cd budget_planner_api
+# python -m ui.app_ui
 ```
 
 ### Run Tests

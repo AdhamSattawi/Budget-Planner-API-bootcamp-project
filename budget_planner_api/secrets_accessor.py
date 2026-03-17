@@ -12,7 +12,7 @@ class RunMode(Enum):
 
 MODE_ENV_VAR = "BUDGET_PLANNER_MODE"
 
-_PARENT_DIR = ".."
+_PARENT_DIR = "."
 DEFAULT_DOTENV_PATH = os.path.join(os.path.dirname(__file__), _PARENT_DIR, ".env")
 TEST_DOTENV_PATH = os.path.join(os.path.dirname(__file__), _PARENT_DIR, ".env.test")
 
