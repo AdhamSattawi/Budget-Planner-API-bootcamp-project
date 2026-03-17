@@ -1,7 +1,7 @@
-from solution.repository.base_repository import BaseRepository
-from solution.models.category import CategoryORM
+from repository.base_repository import BaseRepository
+from models.category import CategoryORM
 
 
 class CategoryRepo(BaseRepository[CategoryORM]):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(CategoryORM)

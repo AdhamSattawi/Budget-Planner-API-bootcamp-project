@@ -1,13 +1,13 @@
 from decimal import Decimal
-from solution.repository.account_repository import AccountRepo
-from solution.models.account import Account, AccountORM
-from solution.models.transaction import TransactionType
-from solution.services.transaction_service import BudgetTransaction
-from solution.services.transfer_service import BudgetTransfer
+from repository.account_repository import AccountRepo
+from models.account import Account, AccountORM
+from models.transaction import TransactionType
+from services.transaction_service import BudgetTransaction
+from services.transfer_service import BudgetTransfer
 from typing import Optional
-from solution.database import async_session_maker
+from database import async_session_maker
 from sqlalchemy.ext.asyncio import AsyncSession
-
+import asyncio
 
 
 def _orm_to_dataclass(account: AccountORM) -> Account:
@@ -68,24 +68,21 @@ class BudgetAccount:
 
     async def get_all_accounts(self) -> list[tuple[Account, Decimal | None]]:
         async with self._session_maker() as session:
-            accounts = await self.repo.get_all(session)
-            if not accounts:
+            orm_accounts = await self.repo.get_all(session)
+            if not orm_accounts:
                 return []
-            all_accounts_balances = []
-            for orm_account in accounts:
-                account = _orm_to_dataclass(orm_account)
-                balance = await self.get_balance(account.id)
-                all_accounts_balances.append((account, balance))
-            return all_accounts_balances
+            accounts = [_orm_to_dataclass(orm) for orm in orm_accounts]
+            tasks = [self.get_balance(acc.id) for acc in accounts]
+            balances = await asyncio.gather(*tasks)
+            return list(zip(accounts, balances))
 
     async def get_net_worth(self) -> Decimal:
         async with self._session_maker() as session:
             accounts = await self.repo.get_all(session)
             total = Decimal(0)
-            for account in accounts:
-                balance = await self.get_balance(account.id)
-                if balance is not None:
-                    total += balance
+            list_of_balances = [self.get_balance(account.id) for account in accounts]
+            balances = await asyncio.gather(*list_of_balances)
+            total = sum((b for b in balances if b is not None), Decimal(0))
             return total
 
     async def _get_account(self, account_id: int) -> Account | None:

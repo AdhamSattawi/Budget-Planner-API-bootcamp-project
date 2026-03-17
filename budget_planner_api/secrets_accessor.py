@@ -4,9 +4,11 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from dotenv import load_dotenv
 
+
 class RunMode(Enum):
     DEV = "dev"
     TEST = "test"
+
 
 MODE_ENV_VAR = "BUDGET_PLANNER_MODE"
 
@@ -16,9 +18,12 @@ TEST_DOTENV_PATH = os.path.join(os.path.dirname(__file__), _PARENT_DIR, ".env.te
 
 DEFAULT_LOGGER = logging.getLogger(__name__)
 
+
 class SecretNotFoundException(Exception):
     """Raised when a requested secret is not found in the environment."""
+
     pass
+
 
 class BaseSecretsAccessor(ABC):
     @classmethod
@@ -28,6 +33,7 @@ class BaseSecretsAccessor(ABC):
     @abstractmethod
     def get_secret(self, secret_name: str) -> str:
         pass
+
 
 class DotEnvSecretsAccessor(BaseSecretsAccessor):
     def __init__(self, logger: logging.Logger = DEFAULT_LOGGER):
@@ -39,7 +45,9 @@ class DotEnvSecretsAccessor(BaseSecretsAccessor):
     def get_secret(self, secret_name: str) -> str:
         secret_value = os.getenv(secret_name)
         if not secret_value:
-            raise SecretNotFoundException(f"Secret '{secret_name}' not found in {self._dotenv_path}")
+            raise SecretNotFoundException(
+                f"Secret '{secret_name}' not found in {self._dotenv_path}"
+            )
         return secret_value
 
     def _get_dotenv_path(self) -> str:
@@ -47,6 +55,7 @@ class DotEnvSecretsAccessor(BaseSecretsAccessor):
         if mode == RunMode.TEST.value:
             return TEST_DOTENV_PATH
         return DEFAULT_DOTENV_PATH
+
 
 def get_secrets_accessor() -> BaseSecretsAccessor:
     return DotEnvSecretsAccessor(logger=DEFAULT_LOGGER)

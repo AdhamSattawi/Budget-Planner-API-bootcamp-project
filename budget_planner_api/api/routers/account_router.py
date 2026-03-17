@@ -1,8 +1,8 @@
 from decimal import Decimal
 from fastapi import APIRouter, Depends
-from solution.models.account import Account
-from solution.api.dependencies import get_account_service
-from solution.services.accounts_service import BudgetAccount
+from models.account import Account
+from api.dependencies import get_account_service
+from services.accounts_service import BudgetAccount
 from typing import Annotated
 
 router = APIRouter(prefix="/accounts", tags=["Accounts"])
@@ -10,7 +10,8 @@ router = APIRouter(prefix="/accounts", tags=["Accounts"])
 
 @router.post("/")
 async def add_new_acccount(
-    new_account: dict, account_service: Annotated[BudgetAccount, Depends(get_account_service)]
+    new_account: dict,
+    account_service: Annotated[BudgetAccount, Depends(get_account_service)],
 ) -> Account:
     name = str(new_account["name"])
     opening_balance = Decimal(str(new_account["opening_balance"]))
@@ -40,7 +41,8 @@ async def view_net_worth(
 
 @router.get("/{account_id}")
 async def view_balance(
-    account_id: int, account_service: Annotated[BudgetAccount, Depends(get_account_service)]
+    account_id: int,
+    account_service: Annotated[BudgetAccount, Depends(get_account_service)],
 ) -> dict:
     account = account_service.get_balance(account_id)
     balance = {"account_balance": str(account)}
@@ -49,7 +51,8 @@ async def view_balance(
 
 @router.delete("/{account_id}")
 async def delete_account(
-    account_id: int, account_service: Annotated[BudgetAccount, Depends(get_account_service)]
+    account_id: int,
+    account_service: Annotated[BudgetAccount, Depends(get_account_service)],
 ) -> bool:
     return account_service.delete_account(account_id)
 

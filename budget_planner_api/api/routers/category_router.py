@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends
-from solution.services.category_service import BudgetCategory
-from solution.models.category import Category, CategoryType
-from solution.api.dependencies import get_category_service
+from services.category_service import BudgetCategory
+from models.category import Category, CategoryType
+from api.dependencies import get_category_service
 from typing import Annotated
+
 router = APIRouter(prefix="/categories", tags=["Categories"])
 
 
@@ -19,7 +20,8 @@ async def view_all_categories(
 
 @router.post("/")
 async def add_category(
-    category: dict, category_service: Annotated[BudgetCategory, Depends(get_category_service)]
+    category: dict,
+    category_service: Annotated[BudgetCategory, Depends(get_category_service)],
 ) -> Category:
     category_name = str(category["name"])
     category_type = CategoryType(category["type"])
@@ -29,6 +31,7 @@ async def add_category(
 
 @router.delete("/{category_id}")
 async def delete_category(
-    category_id: int, category_service: Annotated[BudgetCategory, Depends(get_category_service)]
+    category_id: int,
+    category_service: Annotated[BudgetCategory, Depends(get_category_service)],
 ) -> bool:
     return category_service.delete_category(category_id)

@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from solution.api.routers import (
+from api.routers import (
     account_router,
     category_router,
     transaction_router,

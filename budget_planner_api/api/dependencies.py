@@ -1,13 +1,11 @@
-
-from solution.repository.account_repository import AccountRepo
-from solution.repository.category_repository import CategoryRepo
-from solution.repository.transaction_repository import TransactionRepo
-from solution.repository.transfer_repository import TransferRepo
-
-from solution.services.accounts_service import BudgetAccount
-from solution.services.category_service import BudgetCategory
-from solution.services.transaction_service import BudgetTransaction
-from solution.services.transfer_service import BudgetTransfer
+from repository.account_repository import AccountRepo
+from repository.category_repository import CategoryRepo
+from repository.transaction_repository import TransactionRepo
+from repository.transfer_repository import TransferRepo
+from services.accounts_service import BudgetAccount
+from services.category_service import BudgetCategory
+from services.transaction_service import BudgetTransaction
+from services.transfer_service import BudgetTransfer
 
 transfer_service = BudgetTransfer()
 transaction_service = BudgetTransaction()

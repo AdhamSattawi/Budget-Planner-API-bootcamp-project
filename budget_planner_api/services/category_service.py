@@ -1,9 +1,22 @@
-from solution.models.category import Category, CategoryType
-from solution.repository.category_repository import CategoryRepo, CategoryORM
+import asyncio
+from models.category import Category, CategoryType
+from repository.category_repository import CategoryRepo, CategoryORM
 from typing import Optional
-from solution.database import async_session_maker
+from database import async_session_maker
 from sqlalchemy.ext.asyncio import AsyncSession
 
+DEFAULT_CATEGORIES = [
+    ("Rent", CategoryType.expense),
+    ("Freelancing", CategoryType.income),
+    ("Groceries", CategoryType.expense),
+    ("Work", CategoryType.income),
+    ("SideHustle", CategoryType.income),
+    ("Electronics", CategoryType.expense),
+    ("HomeStuff", CategoryType.expense),
+    ("CarMaintenance", CategoryType.expense),
+    ("SelfCare", CategoryType.expense),
+    ("Restaurants", CategoryType.expense),
+]
 
 
 def _orm_to_dataclass(category: CategoryORM) -> Category:
@@ -11,7 +24,9 @@ def _orm_to_dataclass(category: CategoryORM) -> Category:
 
 
 class BudgetCategory:
-    def __init__(self, repo: Optional[CategoryRepo] = None, session_maker: AsyncSession = None) -> None:
+    def __init__(
+        self, repo: Optional[CategoryRepo] = None, session_maker: AsyncSession = None
+    ) -> None:
         self.repo = repo or CategoryRepo()
         self._session_maker = session_maker or async_session_maker
 
@@ -39,15 +54,8 @@ class BudgetCategory:
     async def add_defaults(self) -> None:
         async with self._session_maker() as session:
             if len(await self.repo.get_all(session)) == 0:
-                await self.add_category(name="Rent", type=CategoryType.expense)
-                await self.add_category(name="Freelancing", type=CategoryType.income)
-                await self.add_category(name="Groceries", type=CategoryType.expense)
-                await self.add_category(name="Work", type=CategoryType.income)
-                await self.add_category(name="SideHustle", type=CategoryType.income)
-                await self.add_category(name="Electronics", type=CategoryType.expense)
-                await self.add_category(name="HomeStuff", type=CategoryType.expense)
-                await self.add_category(
-                    name="CarMaintanance", type=CategoryType.expense
-                )
-                await self.add_category(name="SelfCare", type=CategoryType.expense)
-                await self.add_category(name="Resturants", type=CategoryType.expense)
+                tasks = [
+                    self.add_category(name=name, type=ctype)
+                    for name, ctype in DEFAULT_CATEGORIES
+                ]
+                await asyncio.gather(*tasks)

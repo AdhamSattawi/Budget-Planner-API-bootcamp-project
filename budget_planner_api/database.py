@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
-from solution.secrets_accessor import BaseSecretsAccessor, get_secrets_accessor
+from secrets_accessor import BaseSecretsAccessor, get_secrets_accessor
 
 
 secrets_accessor: BaseSecretsAccessor = get_secrets_accessor()
@@ -14,9 +14,9 @@ def _build_db_url() -> str:
     db_name = secrets_accessor.get_secret("DB_NAME")
     return f"mysql+aiomysql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}"
 
-    
+
 SQLALCHEMY_DATABASE_URL = _build_db_url()
-DB_PARAMS = {}
+DB_PARAMS: dict = {}
 
 
 engine = create_async_engine(SQLALCHEMY_DATABASE_URL, **DB_PARAMS, echo=False)

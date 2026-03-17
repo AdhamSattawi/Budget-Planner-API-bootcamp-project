@@ -2,14 +2,16 @@ from typing import Generic, TypeVar, Protocol
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+
 class HasId(Protocol):
     id: int
 
-ModelType = TypeVar("ModelType", bound = HasId)
+
+ModelType = TypeVar("ModelType", bound=HasId)
 
 
 class BaseRepository(Generic[ModelType]):
-    def __init__(self, model_class: type[ModelType]):
+    def __init__(self, model_class: type[ModelType]) -> None:
         self.model_class = model_class
 
     async def create(self, session: AsyncSession, item: ModelType) -> ModelType:
@@ -20,7 +22,7 @@ class BaseRepository(Generic[ModelType]):
 
     async def get(self, session: AsyncSession, item_id: int) -> ModelType | None:
         return await session.get(self.model_class, item_id)
-        
+
     async def get_all(self, session: AsyncSession) -> list[ModelType]:
         stmt = select(self.model_class)
         db_data = await session.scalars(stmt)

@@ -1,7 +1,7 @@
-from solution.repository.base_repository import BaseRepository
-from solution.models.account import AccountORM
+from repository.base_repository import BaseRepository
+from models.account import AccountORM
 
 
 class AccountRepo(BaseRepository[AccountORM]):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(AccountORM)

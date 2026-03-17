@@ -1,7 +1,7 @@
-from solution.repository.base_repository import BaseRepository
-from solution.models.transfer import TransferORM
+from repository.base_repository import BaseRepository
+from models.transfer import TransferORM
 
 
 class TransferRepo(BaseRepository[TransferORM]):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(TransferORM)

@@ -1,7 +1,7 @@
-from solution.ui.account_requests import accounts_handler
-from solution.ui.category_requests import categories_handler
-from solution.ui.transactions_requests import transactions_handler
-from solution.ui.transfer_requests import transfers_handler
+from ui.account_requests import accounts_handler
+from ui.category_requests import categories_handler
+from ui.transactions_requests import transactions_handler
+from ui.transfer_requests import transfers_handler
 
 TRANSACTION_END = 14
 ACCOUNT_OPTIONS = range(1, 7)

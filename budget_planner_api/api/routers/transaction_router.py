@@ -2,9 +2,9 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Annotated
 from fastapi import APIRouter, Depends
-from solution.models.transaction import Transaction, TransactionType
-from solution.services.transaction_service import BudgetTransaction
-from solution.api.dependencies import get_transaction_service
+from models.transaction import Transaction, TransactionType
+from services.transaction_service import BudgetTransaction
+from api.dependencies import get_transaction_service
 
 router = APIRouter(prefix="/transactions", tags=["Transactions"])
 
