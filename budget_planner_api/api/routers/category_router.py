@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends
 from services.category_service import BudgetCategory
-from models.category import Category, CategoryType
+from models.category import Category
 from api.dependencies import get_category_service
 from typing import Annotated
+from api.schemas.category_schema import CategoryCreate
 
 router = APIRouter(prefix="/categories", tags=["Categories"])
 
@@ -11,7 +12,7 @@ router = APIRouter(prefix="/categories", tags=["Categories"])
 async def view_all_categories(
     category_service: Annotated[BudgetCategory, Depends(get_category_service)],
 ) -> dict:
-    categories_list = category_service.get_all_categories()
+    categories_list = await category_service.get_all_categories()
     categories = {}
     for category in categories_list:
         categories[f"{category.id}_{category.name}"] = str(category.type)
@@ -20,12 +21,10 @@ async def view_all_categories(
 
 @router.post("/")
 async def add_category(
-    category: dict,
+    category: CategoryCreate,
     category_service: Annotated[BudgetCategory, Depends(get_category_service)],
 ) -> Category:
-    category_name = str(category["name"])
-    category_type = CategoryType(category["type"])
-    new_category = category_service.add_category(name=category_name, type=category_type)
+    new_category = await category_service.add_category(name=category.name, type=category.type)
     return new_category
 
 
@@ -34,4 +33,4 @@ async def delete_category(
     category_id: int,
     category_service: Annotated[BudgetCategory, Depends(get_category_service)],
 ) -> bool:
-    return category_service.delete_category(category_id)
+    return await category_service.delete_category(category_id)
