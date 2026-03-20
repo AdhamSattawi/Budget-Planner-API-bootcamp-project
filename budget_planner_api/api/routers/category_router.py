@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from services.category_service import BudgetCategory
 from models.category import Category
 from api.dependencies import get_category_service
@@ -33,4 +33,7 @@ async def delete_category(
     category_id: int,
     category_service: Annotated[BudgetCategory, Depends(get_category_service)],
 ) -> bool:
-    return await category_service.delete_category(category_id)
+    deleted_cat = await category_service.delete_category(category_id)
+    if not deleted_cat:
+        raise HTTPException(status_code=404)
+    return deleted_cat

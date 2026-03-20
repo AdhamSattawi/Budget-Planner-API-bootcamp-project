@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from models.transfer import Transfer
 from services.transfer_service import BudgetTransfer
 from api.dependencies import get_transfer_service
@@ -41,4 +41,6 @@ async def delete_transfer(
     transfer_id: int,
     transfer_service: Annotated[BudgetTransfer, Depends(get_transfer_service)],
 ) -> bool:
-    return await transfer_service.delete_transfer(transfer_id)
+    deleted_trn = await transfer_service.delete_transfer(transfer_id)
+    if not deleted_trn:
+        raise  HTTPException(status_code=404)

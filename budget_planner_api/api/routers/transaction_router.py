@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from models.transaction import Transaction
 from services.transaction_service import BudgetTransaction
 from api.dependencies import get_transaction_service
@@ -43,4 +43,7 @@ async def delete_transaction(
     transaction_id: int,
     transaction_service: Annotated[BudgetTransaction, Depends(get_transaction_service)],
 ) -> bool:
-    return await transaction_service.delete_transaction(transaction_id)
+    deleted_trs = await transaction_service.delete_transaction(transaction_id)
+    if not deleted_trs:
+        raise  HTTPException(status_code=404)
+    return deleted_trs

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
 from database import Base
-from sqlalchemy import Integer, String, DECIMAL, DateTime, func
+from sqlalchemy import ForeignKey, Integer, String, DECIMAL, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 
@@ -23,8 +23,8 @@ class TransferORM(Base):
     __tablename__ = "transfers"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    sender_id: Mapped[int] = mapped_column(Integer, nullable=False)
-    receiver_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    sender_id: Mapped[int] = mapped_column(ForeignKey("accounts.id"), nullable=False)
+    receiver_id: Mapped[int] = mapped_column(ForeignKey("accounts.id"), nullable=False)
     amount: Mapped[Decimal] = mapped_column(DECIMAL, nullable=False)
     description: Mapped[str] = mapped_column(String(DESC_MAX_CHR))
     created_on: Mapped[datetime] = mapped_column(

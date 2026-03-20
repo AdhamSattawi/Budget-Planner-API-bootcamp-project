@@ -43,6 +43,8 @@ async def view_balance(
     account_service: Annotated[BudgetAccount, Depends(get_account_service)],
 ) -> dict:
     account = await account_service.get_balance(account_id)
+    if not account:
+        raise HTTPException(status_code=404)
     balance = {"account_balance": str(account)}
     return balance
 
@@ -52,7 +54,10 @@ async def delete_account(
     account_id: int,
     account_service: Annotated[BudgetAccount, Depends(get_account_service)],
 ) -> bool:
-    return await account_service.delete_account(account_id)
+    deleted_acc = await account_service.delete_account(account_id)
+    if not deleted_acc:
+        raise HTTPException(status_code=404)
+    return deleted_acc
 
 
 @router.put("/{account_id}")
